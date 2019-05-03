@@ -8,37 +8,31 @@ class Ecosystem {
     TotalDeath = Number;
     TotalAlive = Number;
     AverageAlive = Number;
-    DeathChance = Number;
     Creatures = [];
 
-    constructor(age = 0, widthSize = 800, heightSize = 600, totalLife = 2, totalDeath = 0, totalAlive = 2, deathChance = 0.5) {
-        this.Age = age;
+    constructor(widthSize = 800, heightSize = 600, totalAlive = 25) {
+        this.Age = 0;
         this.Size.width = widthSize;
         this.Size.height = heightSize;
-        this.TotalLife = totalLife;
-        this.TotalDeath = totalDeath;
+        this.TotalLife = totalAlive;
+        this.TotalDeath = 0;
         this.TotalAlive = totalAlive;
         this.AverageAlive = 0;
-        this.DeathChance = deathChance;
         this.createAllLife();
     }
-    Life() {
-        if (frameCount == 200) {
-            this.Age++;
-            if (random() * 100 < 20)
-                this.createLife();
-            frameCount = 0;
-        }
 
-        this.Creatures.forEach(creature => {
-            creature.live();
-        });
+    life() {
+        for (let i = 0; i < this.TotalAlive; i++) {
+            this.borders(this.Creatures[i])
+        }
     }
 
-    createLife() {
-        let x = random(50, this.Size.width - 50);
-        let y = random(50, this.Size.height - 50);
-        this.Creatures.push(new Creature(undefined, undefined, undefined, undefined, x, y))
+    borders(creature) {
+        if (creature.Location.x < -creature.Size) creature.Location.x = width + creature.Size;
+        if (creature.Location.y < -creature.Size) creature.Location.y = height + creature.Size;
+        if (creature.Location.x > width + creature.Size) creature.Location.x = -creature.Size;
+        if (creature.Location.y > height + creature.Size) creature.Location.y = -creature.Size;
+        creature.live();
     }
 
     createAllLife() {
@@ -46,4 +40,13 @@ class Ecosystem {
             this.createLife();
         }
     }
+
+    createLife() {
+        let size = random(10, 25);
+        let speed = random(3, 5);
+        let location = createVector(random(this.Size.width), random(this.Size.height))
+        let direction = createVector(random(this.Size.width), random(this.Size.height));
+        this.Creatures.push(new Creature(size, speed, location, direction));
+    }
+
 }
